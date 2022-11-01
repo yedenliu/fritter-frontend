@@ -1,6 +1,7 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import FreetCollection from './collection';
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
@@ -18,17 +19,18 @@ const router = express.Router();
 /**
  * Get freets by author.
  *
- * @name GET /api/freets?author=username
+ * @name GET /api/freets?authorId=id
  *
- * @return {FreetResponse[]} - An array of freets created by user with username, author
- * @throws {400} - If author is not given
- * @throws {404} - If no user has given author
+ * @return {FreetResponse[]} - An array of freets created by user with id, authorId
+ * @throws {400} - If authorId is not given
+ * @throws {404} - If no user has given authorId
  *
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if author query parameter was supplied
+    FreetCollection.deleteExpires();
+    // Check if authorId query parameter was supplied
     if (req.query.author !== undefined) {
       next();
       return;
@@ -42,6 +44,7 @@ router.get(
     userValidator.isAuthorExists
   ],
   async (req: Request, res: Response) => {
+    FreetCollection.deleteExpires();
     const authorFreets = await FreetCollection.findAllByUsername(req.query.author as string);
     const response = authorFreets.map(util.constructFreetResponse);
     res.status(200).json(response);
@@ -66,9 +69,13 @@ router.post(
     freetValidator.isValidFreetContent
   ],
   async (req: Request, res: Response) => {
+    FreetCollection.deleteExpires();
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
-
+    var endTime = req.body.endTime;
+    if (endTime == "") {
+      endTime = null;
+    }
+    const freet = await FreetCollection.addOne(userId, req.body.content, endTime);
     res.status(201).json({
       message: 'Your freet was created successfully.',
       freet: util.constructFreetResponse(freet)
@@ -94,6 +101,7 @@ router.delete(
     freetValidator.isValidFreetModifier
   ],
   async (req: Request, res: Response) => {
+    FreetCollection.deleteExpires();
     await FreetCollection.deleteOne(req.params.freetId);
     res.status(200).json({
       message: 'Your freet was deleted successfully.'
@@ -104,7 +112,7 @@ router.delete(
 /**
  * Modify a freet
  *
- * @name PATCH /api/freets/:id
+ * @name PUT /api/freets/:id
  *
  * @param {string} content - the new content for the freet
  * @return {FreetResponse} - the updated freet
@@ -113,20 +121,74 @@ router.delete(
  * @throws {404} - If the freetId is not valid
  * @throws {400} - If the freet content is empty or a stream of empty spaces
  * @throws {413} - If the freet content is more than 140 characters long
+ * @throws {401} - If user is not verified and tries to edit after 30 minutes
  */
-router.patch(
+router.put(
   '/:freetId?',
   [
     userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,
     freetValidator.isValidFreetModifier,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
+    freetValidator.isValidUpdate
   ],
   async (req: Request, res: Response) => {
-    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    FreetCollection.deleteExpires();
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freet = await FreetCollection.updateOne(req.params.freetId, userId, req.body.content);
     res.status(200).json({
       message: 'Your freet was updated successfully.',
       freet: util.constructFreetResponse(freet)
+    });
+  }
+);
+
+/**
+ * Delete like from Freet
+ *
+ * @name DELETE /api/freets/like/:id
+ *
+ * @throws {403} - If the user is not logged in
+ */
+ router.delete(
+  '/like/:freetId?',
+  [
+    userValidator.isUserLoggedIn,
+  ],
+  async (req: Request, res: Response) => {
+    FreetCollection.deleteExpires();
+    console.log(req.params)
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freetId = (req.params.freetId)
+    await FreetCollection.deleteLikedBy(userId, freetId);
+    await UserCollection.deleteLike(userId, freetId);
+    res.status(200).json({
+      message: 'You have removed your like',
+    });
+  }
+);
+
+
+/**
+ * Add like from Freet
+ *
+ * @name POST /api/freets/like
+ *
+ * @throws {403} - If the user is not logged in
+ */
+ router.post(
+  '/like/',
+  [
+    userValidator.isUserLoggedIn,
+  ],
+  async (req: Request, res: Response) => {
+    FreetCollection.deleteExpires();
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const freetId = (req.body.freetId as string)    
+    await FreetCollection.addLikedBy(userId, freetId);
+    await UserCollection.addLike(userId, freetId);
+    res.status(201).json({
+      message: 'You successfully added your like',
     });
   }
 );

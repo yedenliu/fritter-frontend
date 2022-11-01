@@ -8,14 +8,14 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get the signed in user
- * TODO: may need better route and documentation
- * (so students don't accidentally delete this when copying over)
- *
- * @name GET /api/users/session
- *
- * @return - currently logged in user, or null if not logged in
- */
+* Get the signed in user
+* TODO: may need better route and documentation
+* (so students don't accidentally delete this when copying over)
+*
+* @name GET /api/users/session
+*
+* @return - currently logged in user, or null if not logged in
+*/
 router.get(
   '/session',
   [],
@@ -27,7 +27,7 @@ router.get(
     });
   }
 );
-
+  
 /**
  * Sign in user.
  *

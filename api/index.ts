@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import {userRouter} from '../server/user/router';
 import {freetRouter} from '../server/freet/router';
+import {commentRouter} from '../server/comment/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables

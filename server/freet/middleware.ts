@@ -1,6 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
+import UserCollection from '../user/collection';
 
 /**
  * Checks if a freet with freetId is req.params exists
@@ -10,7 +11,9 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
   const freet = validFormat ? await FreetCollection.findOne(req.params.freetId) : '';
   if (!freet) {
     res.status(404).json({
-      error: `Freet with freet ID ${req.params.freetId} does not exist.`
+      error: {
+        freetNotFound: `Freet with freet ID ${req.params.freetId} does not exist.`
+      }
     });
     return;
   }
@@ -47,6 +50,7 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
 const isValidFreetModifier = async (req: Request, res: Response, next: NextFunction) => {
   const freet = await FreetCollection.findOne(req.params.freetId);
   const userId = freet.authorId._id;
+
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({
       error: 'Cannot modify other users\' freets.'
@@ -57,8 +61,33 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+/**
+ * Adding additional checks for 30 minute limit on editing + if account is verified user 
+ */
+ const isValidUpdate = async (req: Request, res: Response, next: NextFunction) => {
+  const freet = await FreetCollection.findOne(req.params.freetId);
+  const userId = freet.authorId._id;
+  const author = await UserCollection.findOneByUserId(userId);
+  const isVerified = author.isVerified
+
+  const currentTime = new Date()
+  const oldTime = freet.dateCreated
+  var duration = (currentTime.getTime() - oldTime.getTime())/60000 // getting minutes
+
+  if (!isVerified && duration >= 30) {
+    res.status(403).json({
+      error: 'Cannot modify freet after 30 minutes if user is not verified'
+    });
+    return;
+  }
+
+  next();
+};
+
+
 export {
   isValidFreetContent,
   isFreetExists,
-  isValidFreetModifier
+  isValidFreetModifier,
+  isValidUpdate
 };
