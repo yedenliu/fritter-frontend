@@ -18,6 +18,15 @@
           :value="field.value"
           @input="field.value = $event.target.value"
         />
+        
+        <input
+          v-else-if="field.id === 'endTime'"
+          :name="field.id"
+          :value="field.value"
+          type="datetime-local"
+          @input="field.value = $event.target.value"
+        />
+
         <input
           v-else
           :type="field.id === 'password' ? 'password' : 'text'"

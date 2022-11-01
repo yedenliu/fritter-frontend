@@ -52,6 +52,9 @@
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>
     </p>
+    <p v-if="freet.endTime!='Invalid date'">
+      This Freet will delete at {{  freet.endTime }}
+    </p>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
