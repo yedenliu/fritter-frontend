@@ -55,6 +55,11 @@
     <p v-if="freet.endTime!='Invalid date'">
       This Freet will delete at {{  freet.endTime }}
     </p>
+    <p 
+      v-for="user in freet.usersLiked"
+    />
+    Liked by: 
+    {{ user }}
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
