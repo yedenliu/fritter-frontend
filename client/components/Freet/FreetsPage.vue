@@ -48,7 +48,6 @@
           :key="freet.id"
           :freet="freet"
         />
-
         <CommentComponent
           v-for="comment in $store.state.comments"
           :key="comment.id"
