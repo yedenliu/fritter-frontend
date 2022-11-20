@@ -48,6 +48,12 @@
           :key="freet.id"
           :freet="freet"
         />
+
+        <CommentComponent
+          v-for="comment in $store.state.comments"
+          :key="comment.id"
+          :comment="comment"
+        />
       </section>
       <article
         v-else
@@ -62,10 +68,12 @@
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import CommentComponent from '@/components/Comment/CommentComponent.vue';
+import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  components: {FreetComponent, GetFreetsForm, CreateFreetForm, CommentComponent, CreateCommentForm},
   mounted() {
     this.$refs.getFreetsForm.submit();
   }
