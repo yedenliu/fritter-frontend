@@ -13,7 +13,7 @@ export default {
       hasBody: true,
       fields: [
         {id: 'content', label: 'Content', value: '' },
-        {id: 'endTime', label: 'Schedule Auto-delete (Optional)', value: new Date()}
+        {id: 'endTime', label: 'Schedule Auto-delete (Optional)', value: new Date("Invalid Date")}
       ],
       title: 'Create a freet',
       refreshFreets: true,

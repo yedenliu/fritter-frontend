@@ -20,7 +20,7 @@
     />
    
     <p class="info">
-      Posted at {{ .dateCreated }}
+      Posted at {{ dateCreated }}
     </p>
    
     <section class="alerts">

@@ -1,7 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
-import type {Freet} from 'freet/model';
+import type {Freet} from '../freet/model';
 
 /**
  * Define the properties stored in a Like
