@@ -48,6 +48,7 @@
     >
       {{ freet.content }}
     </p>
+
     <p class="info">
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>
@@ -58,6 +59,14 @@
     <p class="info">
     Liked by: {{ freet.usersLiked }}
     </p>
+   <!-- ADD LIKES -->
+    <button v-if="!freet.usersLiked.includes($store.state.username)" @click="addLike">
+      👍 Like
+    </button>
+    <button v-if="freet.usersLiked.includes($store.state.username)" @click="deleteLike">
+      💕 Liked
+    </button>
+
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -71,6 +80,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'FreetComponent',
   props: {
@@ -85,6 +95,9 @@ export default {
       editing: false, // Whether or not this freet is in edit mode
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
+      liking: false,
+      unliking: false,
+      likes: this.freet.usersLiked
     };
   },
   methods: {
@@ -116,6 +129,41 @@ export default {
       };
       this.request(params);
     },
+    addLike() {
+      /**
+       * Add like to freet
+       */
+      this.liking = true;
+      this.likes.push(this.$store.state.username);
+      const params = {
+        method: 'POST',
+        message: 'Successfully liked Freet!',
+        callback: () => {
+          this.$set(this.alerts, params.message, 'success');
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+        }
+      };
+      this.request(params);
+    },
+
+    deleteLike() {
+      /**
+       * Delete like from freet
+       */
+      this.unliking = true;
+      var index = this.likes.indexOf(this.$store.state.username);
+      this.likes.splice(index, this.$store.state.username);
+      const params = {
+        method: 'DELETE',
+        callback: () => {
+          this.$store.commit('alert', {
+            message: 'Successfully deleted like!', status: 'success'
+          });
+        }
+      };
+      this.request(params);
+    },
+
     submitEdit() {
       /**
        * Updates freet to have the submitted draft content.
@@ -126,7 +174,6 @@ export default {
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
       }
-
       const params = {
         method: 'PATCH',
         message: 'Successfully edited freet!',
@@ -138,6 +185,7 @@ export default {
       };
       this.request(params);
     },
+    
     async request(params) {
       /**
        * Submits a request to the freet's endpoint
@@ -151,15 +199,26 @@ export default {
       if (params.body) {
         options.body = params.body;
       }
-
-      try {
-        const r = await fetch(`/api/freets/${this.freet._id}`, options);
-        if (!r.ok) {
+      
+      try { 
+        if (this.liking = true) {
+          const r = await fetch(`/api/freets/like/`, options);
+        } else if (this.unliking = true) {
+          const r = await fetch(`/api/freets/like/${this.freet._id}`, options);
+        } else {
+          const r = await fetch(`/api/freets/${this.freet._id}`, options);
+        }
+        console.log(this.liking)
+        console.log(this.unliking)
+        
+        if (await !r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
 
         this.editing = false;
+        this.liking = false;
+        this.unliking = false;
         this.$store.commit('refreshFreets');
 
         params.callback();
