@@ -1,6 +1,3 @@
-<!-- Reusable component representing a single freet and its actions -->
-<!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-
 <template>
   <article class="comment">
     <header>
@@ -43,7 +40,7 @@
 export default {
   name: 'CommentComponent',
   props: {
-    // Data from the stored freet
+    // Data from the stored comment
     comment: {
       type: Object,
       required: true
@@ -51,8 +48,8 @@ export default {
   },
   data() {
     return {
-      draft: this.comment.content, // Potentially-new content for this freet
-      alerts: {}, // Displays success/error messages encountered during freet modification
+      draft: this.comment.content, // content for this comment
+      alerts: {}, // Displays success/error messages encountered
     };
   },
   methods: {
