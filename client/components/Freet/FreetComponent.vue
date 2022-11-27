@@ -60,10 +60,11 @@
     Liked by: {{ freet.usersLiked }}
     </p>
    <!-- ADD LIKES -->
-    <button v-if="!freet.usersLiked.includes($store.state.username)" @click="addLike">
+    <button class="button" v-if="!freet.usersLiked.includes($store.state.username)" @click="addLike">
       👍 Like
     </button>
-    <button v-if="freet.usersLiked.includes($store.state.username)" @click="deleteLike">
+    
+    <button class="button" v-if="freet.usersLiked.includes($store.state.username)" @click="deleteLike">
       💕 Liked
     </button>
 
@@ -232,9 +233,32 @@ export default {
 </script>
 
 <style scoped>
+html * {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
 .freet {
-    border: 1px solid #111;
+    border: 2px dashed #8b9bdf;
+    border-radius: 15px;
     padding: 20px;
+    margin-top: 15px;
     position: relative;
+}
+
+h3 {
+  color: navy;
+}
+
+.info {
+  color: rgb(135, 135, 135); 
+  margin-top: 5px;
+}
+
+.button {
+  background-color: #c2c8e1;
+  border: 1px solid;
+  border-radius: 5px;
+}
+.button:hover {
+  background-color: rgb(255, 252, 208);
 }
 </style>

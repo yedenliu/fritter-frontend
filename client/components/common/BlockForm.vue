@@ -125,8 +125,14 @@ export default {
 </script>
 
 <style scoped>
+html * {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 form {
-  border: 1px solid #111;
+  border: 1px solid black;
+  border-radius: 15px;
+  box-shadow: 2px 2px 5px rgb(229, 229, 229);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -156,5 +162,14 @@ form h3 {
 textarea {
    font-family: inherit;
    font-size: inherit;
+   margin-bottom: 10px;
+}
+
+input {
+  margin-bottom: 10px;
+}
+
+label {
+  margin-top: 5px;
 }
 </style>

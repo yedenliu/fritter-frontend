@@ -40,9 +40,12 @@
 </template>
 
 <style scoped>
+html * {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
 nav {
-    padding: 1vw 2vw;
-    background-color: #ccc;
+    padding: 1vw 3vw;
+    background-color: #8b9bdf;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -51,7 +54,8 @@ nav {
 
 .title {
     font-size: 32px;
-    margin: 0 5px;
+    margin: 0px 10px;
+    color: white;
 }
 
 img {
@@ -73,6 +77,9 @@ img {
 
 .right a {
     margin-left: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .alerts {

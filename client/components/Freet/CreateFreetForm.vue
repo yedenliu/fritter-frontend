@@ -15,7 +15,7 @@ export default {
         {id: 'content', label: 'Content', value: '' },
         {id: 'endTime', label: 'Schedule Auto-delete (Optional)', value: new Date("Invalid Date")}
       ],
-      title: 'Create a freet',
+      title: 'Create a Freet',
       refreshFreets: true,
       callback: () => {
         const message = 'Successfully created a freet!';

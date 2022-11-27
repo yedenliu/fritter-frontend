@@ -4,7 +4,7 @@
   <main>
     <section v-if="$store.state.username">
       <header>
-        <h2>Welcome @{{ $store.state.username }}</h2>
+        <h2>Welcome @{{ $store.state.username }}!</h2>
       </header>
       <CreateFreetForm />
     </section>
@@ -75,6 +75,10 @@ export default {
 </script>
 
 <style scoped>
+html * {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 section {
   display: flex;
   flex-direction: column;
@@ -90,6 +94,9 @@ button {
     margin-right: 10px;
 }
 
+h2 {
+  color: navy;
+}
 section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;

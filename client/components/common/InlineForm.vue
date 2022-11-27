@@ -49,7 +49,9 @@ form {
     display: flex;
     position: relative;
 }
-
+html * {
+  font-family: Helvetica;
+}
 input {
     padding: 0 5px;
     min-width: 200px;
