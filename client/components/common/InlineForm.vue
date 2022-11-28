@@ -47,7 +47,7 @@ export default {
 <style scoped>
 form {
     display: flex;
-    position: relative;
+    position: relative bottom;
 }
 html * {
   font-family: Helvetica;

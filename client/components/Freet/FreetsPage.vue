@@ -2,7 +2,7 @@
 
 <template>
   <main>
-    <section v-if="$store.state.username">
+    <section class="freetform" v-if="$store.state.username">
       <header>
         <h2>Welcome @{{ $store.state.username }}!</h2>
       </header>
@@ -82,6 +82,10 @@ html * {
 section {
   display: flex;
   flex-direction: column;
+}
+
+section.freetform {
+  background-color: white;
 }
 
 header, header > * {

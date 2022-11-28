@@ -43,13 +43,17 @@
 html * {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
 nav {
     padding: 1vw 3vw;
     background-color: #8b9bdf;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+    position: fixed;
+    width: 100%;
+    height: 45px;
+    box-shadow: 2px 2px 5px lightgray;
 }
 
 .title {

@@ -138,12 +138,23 @@ form {
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 14px;
-  position: relative;
+  position: relative bottom;
 }
 
 article > div {
   display: flex;
   flex-direction: column;
+}
+
+button[type="submit"] {
+  background-color: rgb(236, 236, 236);
+  border: 1px dashed black;
+}
+
+button[type="submit"]:hover {
+  background-color: rgb(255, 250, 201);
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px lightgray;
 }
 
 form > article p {

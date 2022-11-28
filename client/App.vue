@@ -31,6 +31,7 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 body {
@@ -43,6 +44,8 @@ body {
 }
 
 main {
+  position: relative bottom;
+  margin-top: 50px;
   padding: 0 5em 5em;
 }
 
