@@ -48,9 +48,35 @@
     >
       {{ freet.content }}
     </p>
+    
+    <!-- COMMENT SECTION -->
+    <section class="commentform" v-if="$store.state.username">
+      <button v-if="!freet.addComment" @click="showComment">
+        Add Comment
+      </button>
+      <button v-else-if="freet.addComment" @click="hideComment">
+        Hide Comment Form
+      </button>
 
+      <CreateCommentForm 
+        v-else-if="freet.addComment"
+        ref="commentForm"
+        value="content"
+        placeholder="Write comment"
+        button="Add Comment"
+      />
+      
+      <CommentComponent
+      v-for="comment in $store.state.comments"
+      :key="comment.id"
+      :comment="comment"
+      />
+    </section>
+
+    <!-- INFO SECTION -->
     <p class="info">
       Posted at {{ freet.dateModified }}
+      <!-- check this -->
       <i v-if="freet.edited">(edited)</i>
     </p>
     <p class="info" v-if="freet.endTime!='Invalid date'">
@@ -59,12 +85,13 @@
     <p class="info">
     Liked by: {{ freet.usersLiked }}
     </p>
-   <!-- ADD LIKES -->
-    <button class="like" v-if="!freet.usersLiked.includes($store.state.username)" @click="addLike">
+  
+    <!-- ADD LIKES -->
+    <button class="like" v-if="!freet.liked" @click="addLike">
       👍 Like
     </button>
     
-    <button class="like" v-if="freet.usersLiked.includes($store.state.username)" @click="deleteLike">
+    <button class="like" v-if="freet.liked" @click="deleteLike">
       💕 Liked
     </button>
 
@@ -81,14 +108,25 @@
 </template>
 
 <script>
+import CommentComponent from '@/components/Comment/CommentComponent.vue';
+import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
 
 export default {
   name: 'FreetComponent',
+  components: {CommentComponent, CreateCommentForm},
+  mounted() {
+    console.log(this.$refs);
+    this.$refs.commentForm.submit();  
+  },
   props: {
     // Data from the stored freet
     freet: {
       type: Object,
       required: true
+    },
+    comment: {
+      type: Object,
+      required: false
     }
   },
   data() {
@@ -96,9 +134,9 @@ export default {
       editing: false, // Whether or not this freet is in edit mode
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
-      liking: false,
-      unliking: false,
-      likes: this.freet.usersLiked
+      liked: false,
+      likes: this.freet.usersLiked,
+      addComent: false,
     };
   },
   methods: {
@@ -115,6 +153,18 @@ export default {
        */
       this.editing = false;
       this.draft = this.freet.content;
+    },
+    showComment() {
+      /**
+       * Shows the comment form when true, hidden if false
+       */
+      this.addComment = true;
+    },
+    hideComment() {
+      /**
+       * Hides comment if false
+       */
+       this.addComment = false;
     },
     deleteFreet() {
       /**
@@ -134,8 +184,8 @@ export default {
       /**
        * Add like to freet
        */
-      this.liking = true;
       this.likes.push(this.$store.state.username);
+      this.liked = true;
       const params = {
         method: 'POST',
         message: 'Successfully liked Freet!',
@@ -151,9 +201,13 @@ export default {
       /**
        * Delete like from freet
        */
-      this.unliking = true;
+      this.liked = false;
       var index = this.likes.indexOf(this.$store.state.username);
+      console.log(this.likes)
+      console.log(index)
       this.likes.splice(index, this.$store.state.username);
+      console.log(this.likes)
+
       const params = {
         method: 'DELETE',
         callback: () => {
@@ -200,26 +254,23 @@ export default {
       if (params.body) {
         options.body = params.body;
       }
-      
+      const freetID = await this.freet._id
+      let url = `/api/freets/${freetID}`;
       try { 
-        if (this.liking = true) {
-          const r = await fetch(`/api/freets/like/`, options);
-        } else if (this.unliking = true) {
-          const r = await fetch(`/api/freets/like/${this.freet._id}`, options);
-        } else {
-          const r = await fetch(`/api/freets/${this.freet._id}`, options);
-        }
-        console.log(this.liking)
-        console.log(this.unliking)
-        
-        if (await !r.ok) {
+        if (this.liked && !this.editing) {
+          url = `/api/freets/like/`;
+        } 
+        else if (!this.liked && !this.editing) {
+          url = `/api/freets/like/${freetID}`;
+        } 
+        console.log(url)
+        const r = await fetch(url, options); // THIS CREATES ISSUE, URL NOT DEFINED?
+        console.log(r)
+        if (await !r.ok) { // if response unsuccessful 
           const res = await r.json();
           throw new Error(res.error);
         }
-
         this.editing = false;
-        this.liking = false;
-        this.unliking = false;
         this.$store.commit('refreshFreets');
 
         params.callback();
