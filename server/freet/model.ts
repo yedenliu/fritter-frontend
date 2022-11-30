@@ -16,7 +16,7 @@ export type Freet = {
   content: string; 
   dateModified: Date;
   endTime: Date;
-  usersLiked: Array<Types.ObjectId>;
+  usersLiked: Array<string>;
 };
 
 export type PopulatedFreet = {
@@ -26,7 +26,7 @@ export type PopulatedFreet = {
   content: string;
   dateModified: Date;
   endTime: Date;
-  usersLiked: Array<Types.ObjectId>;
+  usersLiked: Array<string>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -64,7 +64,7 @@ const FreetSchema = new Schema<Freet>({
   },
   // Array of users liked 
   usersLiked: {
-    type: [Schema.Types.ObjectId],
+    type: [String],
     required: false,
     ref: 'User',
     default: []

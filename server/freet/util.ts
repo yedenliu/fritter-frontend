@@ -10,7 +10,7 @@ type FreetResponse = {
   content: string;
   dateModified: string;
   endTime: string;
-  usersLiked: Array<Types.ObjectId>;
+  usersLiked: Array<string>;
 };
 
 /**
