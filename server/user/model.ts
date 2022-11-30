@@ -1,13 +1,5 @@
-import type {Types} from 'mongoose';
+import {SchemaType, Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
-
-// =====================================================================
-/**
- * FOR ADMIN: List of verified users 
- * Used in setter for isVerifed property
- */
- let verifiedList: Array<Types.ObjectId | string> = [];
-// =====================================================================
 
 /**
  * This file defines the properties stored in a User
@@ -22,11 +14,6 @@ export type User = {
   isVerified: boolean;
 };
 
-// make sure every value is equal to "something"
-function verify(val: Types.ObjectId | string) {
-  return verifiedList.includes(val);
-}
-
 // Mongoose schema definition for interfacing with a MongoDB table
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
@@ -34,7 +21,7 @@ const UserSchema = new Schema({
   // The user's username
   username: {
     type: String,
-    required: [true, 'username is required']
+    required: [true, 'username is required'],
   },
   // The user's password
   password: {
@@ -57,7 +44,6 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
     required: true,
-    set: verify
   }
 });
 

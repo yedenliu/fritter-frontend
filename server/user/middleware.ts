@@ -144,6 +144,20 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+/**
+ * Checks if user is verified
+ */
+const verifiedList = ['verified1', 'verified2'];
+const isUserVerified = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUsername(req.body.username);
+  console.log(user);
+  if (verifiedList.includes(user.username)){
+    user.isVerified = true;
+    await user.save();
+   }
+  next();
+};
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -152,5 +166,6 @@ export {
   isAccountExists,
   isAuthorExists,
   isValidUsername,
-  isValidPassword
+  isValidPassword,
+  isUserVerified
 };

@@ -48,13 +48,16 @@ router.post(
     userValidator.isUserLoggedOut,
     userValidator.isValidUsername,
     userValidator.isValidPassword,
-    userValidator.isAccountExists
+    userValidator.isAccountExists,
+    userValidator.isUserVerified
   ],
   async (req: Request, res: Response) => {
     const user = await UserCollection.findOneByUsernameAndPassword(
       req.body.username, req.body.password
     );
     req.session.userId = user._id.toString();
+    console.log(req.session.userId);
+    console.log(user.isVerified);
     res.status(201).json({
       message: 'You have logged in successfully',
       user: util.constructUserResponse(user)
@@ -103,7 +106,8 @@ router.post(
     userValidator.isUserLoggedOut,
     userValidator.isValidUsername,
     userValidator.isUsernameNotAlreadyInUse,
-    userValidator.isValidPassword
+    userValidator.isValidPassword,
+    userValidator.isUserVerified
   ],
   async (req: Request, res: Response) => {
     const user = await UserCollection.addOne(req.body.username, req.body.password);
@@ -133,7 +137,7 @@ router.patch(
     userValidator.isUserLoggedIn,
     userValidator.isValidUsername,
     userValidator.isUsernameNotAlreadyInUse,
-    userValidator.isValidPassword
+    userValidator.isValidPassword,
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
