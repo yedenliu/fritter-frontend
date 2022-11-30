@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     freets: [], // All freets created in the app
     comments: [], // All the comments created in the app
     username: null, // Username of the logged in user
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+    alerts: {}, // global success/error messages encountered during submissions to non-visible forms
+    user: null
   },
   mutations: {
     alert(state, payload) {
@@ -31,6 +32,13 @@ const store = new Vuex.Store({
        * @param username - new username to set
        */
       state.username = username;
+    },
+    storeUser(state, user) {
+      /**
+       * Update the stored User to the specified one.
+       * @param user - new User to set
+       */
+      state.user = user;
     },
     updateFilter(state, filter) {
       /**
