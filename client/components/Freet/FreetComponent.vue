@@ -59,10 +59,7 @@
     <p class="info" v-if="freet.endTime!='Invalid date'">
       This Freet will delete at {{  freet.endTime }}
     </p>
-    <p class="info">
-    Liked by: {{ freet.usersLiked }}
-
-    </p>
+    <p class="info">Liked by: {{ freet.usersLiked.join(', ') }}</p>
   
     <!-- ADD LIKES (freet.usersLiked).includes() -->
     <button class="like" 
