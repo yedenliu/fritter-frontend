@@ -43,7 +43,6 @@
       <section
         v-if="$store.state.freets.length"
       >
-      <p>{{$store.state}}</p>
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
