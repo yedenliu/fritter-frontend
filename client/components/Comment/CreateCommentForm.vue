@@ -1,10 +1,17 @@
 
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';
-
+import FreetComponent from '@/components/Freet/FreetComponent.vue';
 export default {
   name: 'CreateCommentForm',
   mixins: [BlockForm],
+  // props: {
+  //   freet: {
+  //     type: Object,
+  //     required: true
+  //   }
+  // },
+  components: {FreetComponent},
   data() {
     return {
       url: '/api/comment',

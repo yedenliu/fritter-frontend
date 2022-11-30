@@ -5,6 +5,7 @@
     <section class="freetform" v-if="$store.state.username">
       <header>
         <h2>Welcome @{{ $store.state.username }}!</h2>
+        <h2 v-if="$store.state.user.isVerified">✅ Verified</h2>
       </header>
       <CreateFreetForm />
     </section>

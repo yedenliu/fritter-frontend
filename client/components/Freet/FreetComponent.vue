@@ -13,6 +13,8 @@
         v-if="$store.state.username === freet.author"
         class="actions"
       >
+      <p>{{editConditions}}</p>
+      <div v-if="$store.state.user.isVerified"> 
         <button
           v-if="editing"
           @click="submitEdit"
@@ -31,12 +33,14 @@
         >
           ✏️ Edit
         </button>
+      </div>
+
         <button @click="deleteFreet">
           🗑️ Delete
         </button>
       </div>
     </header>
-    
+    <p>{{$store.user}}</p>
     <textarea
       v-if="editing"
       class="content"
@@ -95,7 +99,8 @@
         button="Add Comment"
       />
     </article>
-
+      
+    <p>View All Comments</p>
       <CommentComponent
       v-for="comment in $store.state.comments"
       :key="comment.id"
@@ -122,10 +127,11 @@ import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
 export default {
   name: 'FreetComponent',
   components: {CommentComponent, CreateCommentForm},
-  // mounted() {
-  //   console.log(this.$refs);
-  //   this.$refs.commentForm.submit();  
-  // },
+  mounted() {
+    this.$refs.commentForm;  
+    console.log(this.$refs.commentForm);
+    // this.$store.commit('refreshFreets');
+  },
   props: {
     // Data from the stored freet
     freet: {
@@ -140,12 +146,13 @@ export default {
   data() {
     return {
       editing: false, // Whether or not this freet is in edit mode
+      editConditions: Date(this.freet.dateCreated.getTime() + diff*60000) < Date(date),
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
       liking: false,
       liked: false,
       likes: this.freet.usersLiked,
-      addComment: false
+      addComment: true
     };
   },
   methods: {
@@ -259,7 +266,6 @@ export default {
           url = `/api/freets/like/${freetID}`;
         } 
         const r = await fetch(url, options); 
-        console.log(r)
         
         if (await !r.ok) { // if response unsuccessful 
           const res = await r.json();

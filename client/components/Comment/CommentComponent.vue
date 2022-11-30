@@ -44,11 +44,16 @@ export default {
     comment: {
       type: Object,
       required: true
+    },
+    freet: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       draft: this.comment.content, // content for this comment
+      freetId: this.freet._id,
       alerts: {}, // Displays success/error messages encountered
     };
   },
@@ -74,12 +79,13 @@ export default {
       const params = {
         method: 'POST',
         message: 'Successfully added comment!',
-        body: JSON.stringify({content: this.draft}),
+        body: JSON.stringify({commentContent: this.draft, freetId: this.freetId }), // body needs freetId, commentContent
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
         }
       };
+      console.log(params);
       this.request(params);
     },
     async request(params) {
@@ -95,9 +101,22 @@ export default {
       if (params.body) {
         options.body = params.body;
       }
-
+      const commentId = await this.freet._id;
+      let url = `/api/comment/${commentId}`;
+      const posting = (params.method == 'POST');
+      console.log(params.method)
+      console.log(posting)
       try {
-        const r = await fetch(`/api/comment/${this.comment._id}`, options);
+        //const r = await fetch(`/api/comment/${this.comment._id}`, options);
+        if (posting) {
+          url = `/api/comment/`;
+        } 
+        else {
+          url = `/api/comment/${commentId}`;
+        } 
+        const r = await fetch(url, options); 
+        console.log(r)
+        
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
