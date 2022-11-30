@@ -13,8 +13,8 @@
         v-if="$store.state.username === freet.author"
         class="actions"
       >
-      <p>{{editConditions}}</p>
-      <div v-if="$store.state.user.isVerified"> 
+
+      <div class='editing' v-if="$store.state.user.isVerified"> 
         <button
           v-if="editing"
           @click="submitEdit"
@@ -146,7 +146,6 @@ export default {
   data() {
     return {
       editing: false, // Whether or not this freet is in edit mode
-      editConditions: Date(this.freet.dateCreated.getTime() + diff*60000) < Date(date),
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
       liking: false,
@@ -231,8 +230,9 @@ export default {
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
       }
+      
       const params = {
-        method: 'PATCH',
+        method: 'PUT',
         message: 'Successfully edited freet!',
         body: JSON.stringify({content: this.draft}),
         callback: () => {
@@ -308,16 +308,23 @@ h3 {
   color: navy;
 }
 
+.editing {
+  display: inline;
+  padding: 5px;
+}
 .info {
   color: rgb(135, 135, 135); 
   margin-top: 5px;
   font-family: monospace;
 }
 
-.like {
-  background-color: #ffeaf9;
+button {
   border-radius: 5px;
   border: 1px solid gray;
+  margin-bottom: 5px;
+}
+.like {
+  background-color: #ffeaf9;
 }
 .like:hover {
   background-color: #fffcd1;
