@@ -98,7 +98,7 @@ button {
 }
 
 h2 {
-  color: navy;
+  color: #00acee;
 }
 section .scrollbox {
   flex: 1 0 50vh;

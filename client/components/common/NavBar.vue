@@ -46,13 +46,13 @@ html * {
 
 nav {
     padding: 1vw 3vw;
-    background-color: #8b9bdf;
+    background-color: #00acee;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
     width: 100%;
-    height: 45px;
+    height: 50px;
     box-shadow: 2px 2px 5px lightgray;
 }
 

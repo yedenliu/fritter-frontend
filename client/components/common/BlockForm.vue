@@ -18,7 +18,7 @@
           :value="field.value"
           @input="field.value = $event.target.value"
         />
-        
+
         <input
           v-else-if="field.id === 'endTime'"
           :name="field.id"
@@ -108,7 +108,7 @@ export default {
           this.$store.commit('setUsername', res.user ? res.user.username : null);
           this.$store.commit('storeUser', res.user);
         }
-
+        
         if (this.refreshFreets) {
           this.$store.commit('refreshFreets');
         }

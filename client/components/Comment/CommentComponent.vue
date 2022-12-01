@@ -45,15 +45,10 @@ export default {
       type: Object,
       required: true
     },
-    freet: {
-      type: Object,
-      required: true
-    }
   },
   data() {
     return {
       draft: this.comment.content, // content for this comment
-      freetId: this.freet._id,
       alerts: {}, // Displays success/error messages encountered
     };
   },
@@ -102,19 +97,18 @@ export default {
         options.body = params.body;
       }
       const commentId = await this.freet._id;
-      let url = `/api/comment/${commentId}`;
-      const posting = (params.method == 'POST');
-      console.log(params.method)
-      console.log(posting)
+      // let url = `/api/comment/${commentId}`;
+      // const posting = (params.method === 'POST');
+      console.log(params.method);
       try {
-        //const r = await fetch(`/api/comment/${this.comment._id}`, options);
-        if (posting) {
-          url = `/api/comment/`;
-        } 
-        else {
-          url = `/api/comment/${commentId}`;
-        } 
-        const r = await fetch(url, options); 
+        const r = await fetch(`/api/comment/${this.comment._id}`, options);
+        // if (posting) {
+        //   url = `/api/comment/`;
+        // } 
+        // else {
+        //   url = `/api/comment/${commentId}`;
+        // } 
+        // const r = await fetch(url, options); 
         console.log(r)
         
         if (!r.ok) {

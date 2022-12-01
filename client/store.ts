@@ -54,6 +54,13 @@ const store = new Vuex.Store({
        */
       state.freets = freets;
     },
+    updateComments(state, comments) {
+      /**
+       * Update the stored freets to the provided freets.
+       * @param comments - Freets to store
+       */
+      state.comments = comments;
+    },
     async refreshFreets(state) {
       /**
        * Request the server for the currently available freets.

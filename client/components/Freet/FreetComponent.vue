@@ -9,6 +9,7 @@
       <h3 class="author">
         @{{ freet.author }}
       </h3>
+      <hr class="rounded">
       <div
         v-if="$store.state.username === freet.author"
         class="actions"
@@ -19,7 +20,7 @@
           v-if="editing"
           @click="submitEdit"
         >
-          ✅ Save changes
+          💾 Save changes
         </button>
         <button
           v-if="editing"
@@ -40,7 +41,7 @@
         </button>
       </div>
     </header>
-    <p>{{$store.user}}</p>
+
     <textarea
       v-if="editing"
       class="content"
@@ -56,16 +57,16 @@
 
     <!-- INFO SECTION -->
     <p class="info">
-      Posted at {{ freet.dateModified }}
-      <!-- check this -->
-      <i v-if="freet.edited">(edited)</i>
-    </p>
+      Posted at {{ freet.dateCreated }}
+     </p>
+    <p class="info" v-if="!(freet.dateCreated==freet.dateModified)">Edited at {{freet.dateModified}}</p>
     <p class="info" v-if="freet.endTime!='Invalid date'">
       This Freet will delete at {{  freet.endTime }}
     </p>
     <p class="info">Liked by: {{ freet.usersLiked.join(', ') }}</p>
   
     <!-- ADD LIKES (freet.usersLiked).includes() -->
+    
     <button class="like" 
       v-if="!(freet.usersLiked).includes($store.state.username)" 
       @click="addLike">
@@ -77,35 +78,33 @@
       @click="deleteLike">
       💕 Liked
     </button>
+   
     <!-- COMMENT SECTION -->
+    <hr class="rounded">
 
-    <article class="commentform">
-      <button 
-        v-if="!addComment"
-        v-on:click="addComment = !addComment">
-        Add Comment
-      </button>
-      <button 
-        v-if="addComment"
-        v-on:click="addComment = !addComment">
-        Hide Comment Form
-      </button>
-
-      <CreateCommentForm 
-        v-if="addComment"
-        ref="commentForm"
-        value="content"
-        placeholder="Write comment"
-        button="Add Comment"
-      />
-    </article>
-      
-    <p>View All Comments</p>
-      <CommentComponent
-      v-for="comment in $store.state.comments"
-      :key="comment.id"
-      :comment="comment"
-      />
+    <button 
+      v-if="!addComment"
+      v-on:click="addComment = !addComment">
+      Add Comment
+    </button>
+    <button 
+      v-if="addComment"
+      v-on:click="addComment = !addComment">
+      Hide Comment Form
+    </button>
+    
+    <CreateCommentForm 
+    class="comment-form"
+    v-if="addComment"/>
+    <!-- ref="commentForm" -->
+  
+    <p v-if="addComment">View All Comments</p>
+    
+    <CommentComponent
+    v-for="comment in $store.state.comments"
+    :key="comment.id"
+    :comment="comment"
+    />
    
     <!-- ALERTS -->
     <section class="alerts">
@@ -127,11 +126,11 @@ import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
 export default {
   name: 'FreetComponent',
   components: {CommentComponent, CreateCommentForm},
-  mounted() {
-    this.$refs.commentForm;  
-    console.log(this.$refs.commentForm);
-    // this.$store.commit('refreshFreets');
-  },
+  // mounted() {
+  //   this.$refs.commentForm;  
+  //   this.$store.commit('refreshFreets');
+  //   this.$store.commit('updateComments');
+  // },
   props: {
     // Data from the stored freet
     freet: {
@@ -151,7 +150,7 @@ export default {
       liking: false,
       liked: false,
       likes: this.freet.usersLiked,
-      addComment: true
+      addComment: false
     };
   },
   methods: {
@@ -198,10 +197,8 @@ export default {
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
         }
       };
-      // console.log(this.likes)
       this.request(params);
     },
-
     deleteLike() {
       /**
        * Delete like from freet
@@ -219,7 +216,6 @@ export default {
       };
       this.request(params);
     },
-
     submitEdit() {
       /**
        * Updates freet to have the submitted draft content.
@@ -242,7 +238,6 @@ export default {
       };
       this.request(params);
     },
-    
     async request(params) {
       /**
        * Submits a request to the freet's endpoint
@@ -271,11 +266,10 @@ export default {
           const res = await r.json();
           throw new Error(res.error);
         }
-        r.json().then((data) => {
-            console.log(data);
-        });
+        
         this.editing = false;
         this.liking = false;
+        this.$store.commit('updateComments');
         this.$store.commit('refreshFreets');
 
         params.callback();
@@ -293,7 +287,7 @@ html * {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 .freet {
-    border: 1px solid #8b9bdf;
+    border: 1px solid #00acee;
     border-radius: 15px;
     padding: 20px;
     margin-top: 15px;
@@ -301,19 +295,28 @@ html * {
 }
 
 article.freet:hover {
-  background-color: #f0f3ff;
+  background-color: #f8fcff;
 }
 
 h3 {
-  color: navy;
+  color: #00acee;
 }
 
+.comment-form  {
+  font-size: 14px;
+  color: black;
+  border: none;
+  box-shadow: none;
+  margin-top: 5px;
+  padding: 15px;
+  background-color: #e9f3fe;
+}
 .editing {
   display: inline;
   padding: 5px;
 }
 .info {
-  color: rgb(135, 135, 135); 
+  color: rgb(186, 184, 184); 
   margin-top: 5px;
   font-family: monospace;
 }
@@ -329,5 +332,8 @@ button {
 .like:hover {
   background-color: #fffcd1;
   box-shadow: 2px 2px 3px lightgray;
+}
+hr.rounded {
+  border-top: 1px solid #00acee;
 }
 </style>
