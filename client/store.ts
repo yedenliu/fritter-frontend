@@ -11,7 +11,6 @@ const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown freets by (null = show all)
     freets: [], // All freets created in the app
-    comments: [], // All the comments created in the app
     username: null, // Username of the logged in user
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     user: null
@@ -53,13 +52,6 @@ const store = new Vuex.Store({
        * @param freets - Freets to store
        */
       state.freets = freets;
-    },
-    updateComments(state, comments) {
-      /**
-       * Update the stored freets to the provided freets.
-       * @param comments - Freets to store
-       */
-      state.comments = comments;
     },
     async refreshFreets(state) {
       /**

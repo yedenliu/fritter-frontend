@@ -79,33 +79,7 @@
       💕 Liked
     </button>
    
-    <!-- COMMENT SECTION -->
-    <hr class="rounded">
-
-    <button 
-      v-if="!addComment"
-      v-on:click="addComment = !addComment">
-      Add Comment
-    </button>
-    <button 
-      v-if="addComment"
-      v-on:click="addComment = !addComment">
-      Hide Comment Form
-    </button>
     
-    <CreateCommentForm 
-    class="comment-form"
-    v-if="addComment"/>
-    <!-- ref="commentForm" -->
-  
-    <p v-if="addComment">View All Comments</p>
-    
-    <CommentComponent
-    v-for="comment in $store.state.comments"
-    :key="comment.id"
-    :comment="comment"
-    />
-   
     <!-- ALERTS -->
     <section class="alerts">
       <article
@@ -120,26 +94,15 @@
 </template>
 
 <script>
-import CommentComponent from '@/components/Comment/CommentComponent.vue';
-import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
 
 export default {
   name: 'FreetComponent',
-  components: {CommentComponent, CreateCommentForm},
-  // mounted() {
-  //   this.$refs.commentForm;  
-  //   this.$store.commit('refreshFreets');
-  //   this.$store.commit('updateComments');
-  // },
+  
   props: {
     // Data from the stored freet
     freet: {
       type: Object,
       required: true
-    },
-    comment: {
-      type: Object,
-      required: false
     }
   },
   data() {
@@ -150,7 +113,6 @@ export default {
       liking: false,
       liked: false,
       likes: this.freet.usersLiked,
-      addComment: false
     };
   },
   methods: {
@@ -269,7 +231,6 @@ export default {
         
         this.editing = false;
         this.liking = false;
-        this.$store.commit('updateComments');
         this.$store.commit('refreshFreets');
 
         params.callback();
@@ -302,15 +263,6 @@ h3 {
   color: #00acee;
 }
 
-.comment-form  {
-  font-size: 14px;
-  color: black;
-  border: none;
-  box-shadow: none;
-  margin-top: 5px;
-  padding: 15px;
-  background-color: #e9f3fe;
-}
 .editing {
   display: inline;
   padding: 5px;
